@@ -1,0 +1,6 @@
+select x.tweet_id 
+from (
+select tweet_id, length(content)
+from tweets
+where length(content) > 15
+)x

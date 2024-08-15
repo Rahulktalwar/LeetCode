@@ -1,0 +1,11 @@
+with cte as (
+ select s.user_id user_id,
+ sum(case when action='confirmed' then 1 else 0 end) as conf,
+ count(*) as tot_req
+ from signups s
+ left join confirmations c on c.user_id=s.user_id
+ group by s.user_id
+ )
+
+ select user_id, round(conf/tot_req,2) as confirmation_rate
+ from cte ;

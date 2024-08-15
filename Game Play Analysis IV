@@ -1,0 +1,9 @@
+with cte as (
+select player_id, min(event_date) as login
+ from activity
+ group by player_id
+)
+
+select round(sum(datediff(event_date,login)=1)/count(distinct c.player_id),2) as fraction
+from activity a 
+join cte c on c.player_id=a.player_id

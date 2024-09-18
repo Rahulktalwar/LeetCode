@@ -3,3 +3,15 @@ from customer
 group by customer_id
 having count(distinct product_key) in 
 (select count(distinct product_key) from product);
+
+******************************OR***********************************
+
+with cte as (
+select customer_id, count(distinct c.product_key) as pk
+ from customer c
+ join product p on p.product_key=c.product_key
+ group by 1
+having pk= (select count(distinct product_key) from product)
+)
+
+select customer_id from cte

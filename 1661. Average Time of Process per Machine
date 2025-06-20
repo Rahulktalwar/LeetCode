@@ -1,3 +1,4 @@
+1.
 with process_time as (
 select  a.machine_id machine_id, a.process_id, a.activity_type a_act,a.timestamp start,b.activity_type b_act, b.timestamp end
 from activity a
@@ -9,3 +10,13 @@ where a.activity_type in ("start") and b.activity_type in ("end")
 select machine_id, round(avg(end-start),3) as processing_time
 from process_time
 group by machine_id ;
+
+
+2.
+select a.machine_id,
+round(avg(a.timestamp - b.timestamp),3) as processing_time 
+from activity a
+join activity b on a.machine_id=b.machine_id
+and a.process_id =b.process_id  
+where a.activity_type ='end' and b.activity_type ='start'
+group by 1 ;

@@ -1,0 +1,9 @@
+with cte as (
+select customer_number, count(order_number) as c
+from orders
+group by 1
+order by c desc limit 1
+)
+
+select customer_number
+from cte

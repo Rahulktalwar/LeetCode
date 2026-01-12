@@ -1,0 +1,31 @@
+----with window functions
+with cte as (
+ SELECT
+        *,
+        COUNT(*) OVER (PARTITION BY tiv_2015) AS tiv_2015_count,
+        COUNT(*) OVER (PARTITION BY lat, lon) AS loc_count
+    FROM
+        Insurance
+)
+
+select ROUND(SUM(tiv_2016)::numeric, 2) as tiv_2016 
+from cte
+where tiv_2015_count >1 and loc_count =1
+
+
+
+------without window functions
+select  ROUND(SUM(tiv_2016)::numeric, 2) as tiv_2016
+from insurance  
+where tiv_2015 in (
+select tiv_2015
+from insurance
+group by tiv_2015
+having count(*)>1
+)  
+and (lat,lon) in (
+select lat, lon 
+from insurance 
+group by lat, lon
+having count(*)=1  
+)
